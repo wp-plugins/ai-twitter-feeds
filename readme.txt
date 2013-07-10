@@ -18,7 +18,6 @@ Features:
 * Highly configurable, many visual options.
 * Using Twitter 1.1 API with authentication in Admin.
 * No JavaScript embedded.
-* More [WordPress Plugins](http://3doordigital.com/wordpress/plugins/).
 * You can manage tweets limits, twitter profile image,date, retweet link, reply link, favourite link and username from admin panel.
 * You can manage color scheme such as background color, link color, link hover color, border color, text color, header text color, header username color, header hover color on username.
 
