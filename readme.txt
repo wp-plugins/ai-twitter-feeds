@@ -13,13 +13,13 @@ Here is a short description of the plugin.  This should be no more than 150 char
 == Description ==
 
 Features:
- 1. Embed timelines using only username.
- 2. Show tweets which contain a keyword.
- 3. Highly configurable, many visual options.
- 4. Using Twitter 1.1 API with authentication in Admin.
- 5. No JavaScript embedded.
- 6. You can manage tweets limits,twitter profile image,date,retweet link,reply link,favourite link and username     from admin panel.
- 7. You can manage color scheme such as background color, link color, link hover color, border color, text color,header text color, header username color, header hover color on username.
+* Embed timelines using only username.
+* Show tweets which contain a keyword.
+* Highly configurable, many visual options.
+* Using Twitter 1.1 API with authentication in Admin.
+* No JavaScript embedded.
+* You can manage tweets limits,twitter profile image,date,retweet link,reply link,favourite link and username     from admin panel.
+* You can manage color scheme such as background color, link color, link hover color, border color, text color,header text color, header username color, header hover color on username.
 
 
 == Installation ==
