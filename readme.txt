@@ -1,32 +1,25 @@
 === AI Twitter Feeds (Twitter widget & shortcode) ===
 Contributors: augustinfotech
-Tags: Twitter, Feed, Twitter Shortcode, Twitter tweet, tweets, twitter, widget, twitter connect, twitter follow, twitter follow button, twitter share, twitter share button
+Tags: Twitter, Twitter API, Twitter 1.1, Twitter authentication, Feed, Twitter Shortcode, Twitter tweet, tweets, twitter, widget, twitter connect, twitter follow, twitter follow button, twitter share, twitter share button
 Requires at least: 3.2
 Tested up to: 3.5.2
 Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+As traditional version of twitter API is no longer working now, this plugin provides facility to display twitter tweets on your website using Twitter 1.1 API with authentication.
 
 == Description ==
 
-
 Features:
 
-1. Embed timelines using only username.
-
-2. Show tweets which contain a keyword.
-
-3. Highly configurable, many visual options.
-
-4. Using Twitter 1.1 API with authentication in Admin.
-
-5. No JavaScript embedded.
-
-6. You can manage tweets limits, twitter profile image, date, retweet link, reply link, favourite link and username     from admin panel.
-
-7. You can manage color scheme such as background color, link color, link hover color, border color, text color,header text color, header username color, header hover color on username.
+* Embed timelines using only username.
+* Show tweets which contain a keyword.
+* Highly configurable, many visual options.
+* Using Twitter 1.1 API with authentication in Admin.
+* No JavaScript embedded.
+* You can manage tweets limits, twitter profile image,date, retweet link, reply link, favourite link and username from admin panel.
+* You can manage color scheme such as background color, link color, link hover color, border color, text color, header text color, header username color, header hover color on username.
 
 
 == Installation ==
@@ -45,30 +38,26 @@ To use this one, please follow the steps bellow:
 
 Steps
 
-1. Upload `AI-Twitter-Feeds folder` to the `/wp-content/plugins/` directory
+1. Upload 'AI-Twitter-Feeds folder' to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Set Options for Twitter from the `Settings/AI Twitter Settings` Admin Menu Link
-4. Place PHP code '< ? php do_shortcode("[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@"    symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']"); ? >' in your php templates.
-5. Place shortcode `[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)'    ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']` in your post(s)
+3. Set Options for Twitter from the 'Settings/AI Twitter Settings' Admin Menu Link
+4. Place PHP code '< ? php do_shortcode("[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']"); ? >' in your php templates.
+5. Place shortcode '[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']' in your post(s)
 6. Use the widget to place it in your sidebar or other areas!
 
 == Frequently Asked Questions ==
 No Questions
 
 == Screenshots ==
+
 1. Widget Setting example in admin.
 2. Widget view on front side.
 3. Use Shortcode OR PHP code in Post/Template.
-4. Settings Screen from Wordpress Admin.
+4. Settings Screen from WordPress Admin.
 
 == Changelog ==
 = 1.0 =
-* Frist version.
-* Another change.
+* First version.
 
 == Upgrade Notice ==
 No Upgrade
-
-== Arbitrary section ==
-
-== A brief Markdown Example ==
