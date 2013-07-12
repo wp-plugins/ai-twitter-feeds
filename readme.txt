@@ -1,6 +1,5 @@
 === AI Twitter Feeds (Twitter widget & shortcode) ===
 Contributors: augustinfotech
-Donate link: http://example.com/
 Tags: Twitter, Feed, Twitter Shortcode, Twitter tweet, tweets, twitter, widget, twitter connect, twitter follow, twitter follow button, twitter share, twitter share button
 Requires at least: 3.2
 Tested up to: 3.5.2
@@ -25,7 +24,7 @@ Features:
 
 5. No JavaScript embedded.
 
-6. You can manage tweets limits,twitter profile image,date,retweet link,reply link,favourite link and username     from admin panel.
+6. You can manage tweets limits, twitter profile image, date, retweet link, reply link, favourite link and username     from admin panel.
 
 7. You can manage color scheme such as background color, link color, link hover color, border color, text color,header text color, header username color, header hover color on username.
 
