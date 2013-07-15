@@ -3,7 +3,7 @@
 Plugin Name: AI Twitter Feeds (Twitter widget & shortcode)
 Plugin URI: http://www.augustinfotech.com
 Description: Replaces a shortcode such as [AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title'], or a widget, with a tweets display 
-Version: 1.0
+Version: 1.1
 Text Domain: aitwitterfeeds
 Author: August Infotech
 Author URI: http://www.augustinfotech.com
@@ -17,6 +17,7 @@ add_action('admin_menu','ai_twitter_setting');
 /*Register Twitter Specific Options*/
 add_action('admin_init','ai_init');
 
+add_action('wp_dashboard_setup', 'ai_add_dashboard_tweets_feed' );
 
 # Load the language files
 function ai_tweets_init() {
@@ -32,6 +33,11 @@ function ai_twitter_setting()
 	
 
 }
+
+function ai_add_dashboard_tweets_feed() {
+	wp_add_dashboard_widget('ai_dashboard_widget', 'AI Twitter Feeds', 'ai_get_twitter_feeds');
+}
+
 /*
  * Register Twitter Specific Options
 */
@@ -57,6 +63,7 @@ function ai_init(){
 	register_setting('ai_options','ai_header_name_color');
 	register_setting('ai_options','ai_header_username_color');
 	register_setting('ai_options','ai_header_username_hover_color');
+	register_setting('ai_options','ai_follow_button');
 } 
 
 if ( function_exists('register_uninstall_hook') )
@@ -84,6 +91,7 @@ function ai_twitterfeed_uninstall()
 	 delete_option('ai_header_name_color');
 	 delete_option('ai_header_username_color');
 	 delete_option('ai_header_username_hover_color');
+	 delete_option('ai_follow_button');
 }		
 /*
  * Display the Options form for AI Twitter Feed
@@ -92,215 +100,256 @@ function ai_twitterfeed_uninstall()
 function ai_option_page()
 {
 	?>
-	<div class="wrap">
-        <img src="<?php echo plugins_url('AI-Twitter-Feeds/css/augustinfotech.jpg'); ?>" class="icon32" />
-<h2><?php _e('AI Twitter Feed Options','aitwitterfeeds');?></h2>
-		<p><?php _e('Here you can set or edit the fields needed for the plugin.','aitwitterfeeds');?></p>
-		<p><?php _e('You can find these settings here: <a href="https://dev.twitter.com/apps" target="_blank">Twitter API</a>','aitwitterfeeds');?></p>
-		<form action="options.php" method="post" id="ai-options-form">
-			<?php settings_fields('ai_options'); ?>
-			<table class="form-table">
-				<tr class="even" valign="top">
-					<th scope="row"><label for="ai_consumer_screen_name"><?php _e('Twitter Screen(User) Name:','aitwitterfeeds');?> </label></th>				
-					<td><input type="text" id="ai_consumer_screen_name" name="ai_consumer_screen_name" class="regular-text" value="<?php echo esc_attr(get_option('ai_consumer_screen_name')); ?>" />
-						<p class="description"><?php _e('(Without the "@" symbol)','aitwitterfeeds');?></p>
-					</td>
-				</tr>
-				<tr class="odd" valign="top">
-					<th scope="row"><label for="ai_consumer_key"><?php _e('Consumer Key:','aitwitterfeeds');?> </label></th>				
-					<td><input type="text" id="ai_consumer_key" name="ai_consumer_key" class="regular-text" value="<?php echo esc_attr(get_option('ai_consumer_key')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-				<tr class="even" valign="top">
-					<th scope="row"><label for="ai_consumer_secret"><?php _e('Consumer Secret:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_consumer_secret" name="ai_consumer_secret" class="regular-text" value="<?php echo esc_attr(get_option('ai_consumer_secret')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-				<tr class="odd" valign="top">
-					<th scope="row"><label for="ai_access_token"><?php _e('Access Token:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_access_token" name="ai_access_token" class="regular-text" value="<?php echo esc_attr(get_option('ai_access_token')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-				<tr class="even" valign="top">
-					<th scope="row"><label for="ai_access_token_secret"><?php _e('Access Token Secret:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_access_token_secret" name="ai_access_token_secret" class="regular-text" value="<?php echo esc_attr(get_option('ai_access_token_secret')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_display_number_of_tweets"><?php _e('Number Of Tweets:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_display_number_of_tweets" name="ai_display_number_of_tweets" class="regular-text" value="<?php echo esc_attr(get_option('ai_display_number_of_tweets')); ?>" />
-						<p></p>
-					</td>
-				</tr>	
-				<tr class="even" valign="top">
-					<th scope="row"><label for="ai_display_username"><?php _e('Display username:','aitwitterfeeds');?>  </label></th>
-					<td>
-                    <?php 
+
+<div class="wrap"> <img src="<?php echo plugins_url('ai-twitter-feeds/css/augustinfotech.jpg'); ?>" class="icon32" />
+  <h2>
+    <?php _e('AI Twitter Feed Options','aitwitterfeeds');?>
+  </h2>
+  <p>
+    <?php _e('Here you can set or edit the fields needed for the plugin.','aitwitterfeeds');?>
+  </p>
+  <p>
+    <?php _e('You can find these settings here: <a href="https://dev.twitter.com/apps" target="_blank">Twitter API</a>','aitwitterfeeds');?>
+  </p>
+  <form action="options.php" method="post" id="ai-options-form">
+    <?php settings_fields('ai_options'); ?>
+    <table class="form-table">
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_consumer_screen_name">
+            <?php _e('Twitter Screen(User) Name or  Hashtags/keywords:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_consumer_screen_name" name="ai_consumer_screen_name" class="regular-text" value="<?php echo esc_attr(get_option('ai_consumer_screen_name')); ?>" />
+          <p class="description">
+            <?php _e('(Without the "@" / "#" symbol)','aitwitterfeeds');?>
+          </p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_consumer_key">
+            <?php _e('Consumer Key:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_consumer_key" name="ai_consumer_key" class="regular-text" value="<?php echo esc_attr(get_option('ai_consumer_key')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_consumer_secret">
+            <?php _e('Consumer Secret:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_consumer_secret" name="ai_consumer_secret" class="regular-text" value="<?php echo esc_attr(get_option('ai_consumer_secret')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_access_token">
+            <?php _e('Access Token:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_access_token" name="ai_access_token" class="regular-text" value="<?php echo esc_attr(get_option('ai_access_token')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_access_token_secret">
+            <?php _e('Access Token Secret:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_access_token_secret" name="ai_access_token_secret" class="regular-text" value="<?php echo esc_attr(get_option('ai_access_token_secret')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_display_number_of_tweets">
+            <?php _e('Number Of Tweets:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_display_number_of_tweets" name="ai_display_number_of_tweets" class="regular-text" value="<?php echo esc_attr(get_option('ai_display_number_of_tweets')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_display_username">
+            <?php _e('Display username:','aitwitterfeeds');?>
+          </label></th>
+        <td><?php 
 						$ai_yesno=array('Yes'=>'Yes','No'=>'No');
 						$ai_display_username_current=esc_attr(get_option('ai_display_username'));
 					?>
-					<select name="ai_display_username" id="ai_display_username">
-                    	<?php foreach($ai_yesno as $ai_k=>$ai_v){?>
-                        	<option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_display_username_current);?> ><?php echo $ai_v; ?></option>
-                    	<?php } ?>
-                    </select>
-						<p></p>
-					</td>
-				</tr>
-                <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_show_image"><?php _e('Display avatars:','aitwitterfeeds');?>  </label></th>
-					<td>
-                    <?php 
+          <select name="ai_display_username" id="ai_display_username">
+            <?php foreach($ai_yesno as $ai_k=>$ai_v){?>
+            <option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_display_username_current);?> ><?php echo $ai_v; ?></option>
+            <?php } ?>
+          </select>
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_show_image">
+            <?php _e('Display avatars:','aitwitterfeeds');?>
+          </label></th>
+        <td><?php 
 						$ai_show_image_current=esc_attr(get_option('ai_show_image'));
 					?>
-					<select name="ai_show_image" id="ai_show_image">
-                    	<?php foreach($ai_yesno as $ai_k=>$ai_v){?>
-                        	<option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_show_image_current);?> ><?php echo $ai_v; ?></option>
-                    	<?php } ?>
-                    </select>
-						<p></p>
-					</td>
-				</tr>
-                <tr class="even" valign="top">
-					<th scope="row"><label for="ai_display_timestamps"><?php _e('Display timestamps:','aitwitterfeeds');?>  </label></th>
-					<td>
-                    <?php 
+          <select name="ai_show_image" id="ai_show_image">
+            <?php foreach($ai_yesno as $ai_k=>$ai_v){?>
+            <option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_show_image_current);?> ><?php echo $ai_v; ?></option>
+            <?php } ?>
+          </select>
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_display_timestamps">
+            <?php _e('Display timestamps:','aitwitterfeeds');?>
+          </label></th>
+        <td><?php 
 						$ai_display_timestamps_current=esc_attr(get_option('ai_display_timestamps'));
 					?>
-					<select name="ai_display_timestamps" id="ai_display_timestamps">
-                    	<?php foreach($ai_yesno as $ai_k=>$ai_v){?>
-                        	<option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_display_timestamps_current);?> ><?php echo $ai_v; ?></option>
-                    	<?php } ?>
-                    </select>
-						<p></p>
-					</td>
-				</tr>
-                <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_reply_link"><?php _e('Reply link:','aitwitterfeeds');?>  </label></th>
-					<td>
-                    <?php 
+          <select name="ai_display_timestamps" id="ai_display_timestamps">
+            <?php foreach($ai_yesno as $ai_k=>$ai_v){?>
+            <option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_display_timestamps_current);?> ><?php echo $ai_v; ?></option>
+            <?php } ?>
+          </select>
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_reply_link">
+            <?php _e('Reply link:','aitwitterfeeds');?>
+          </label></th>
+        <td><?php 
 						$ai_reply_link_current=esc_attr(get_option('ai_reply_link'));
 					?>
-					<select name="ai_reply_link" id="ai_reply_link">
-                    	<?php foreach($ai_yesno as $ai_k=>$ai_v){?>
-                        	<option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_reply_link_current);?> ><?php echo $ai_v; ?></option>
-                    	<?php } ?>
-                    </select>
-						<p></p>
-					</td>
-				</tr>
-                <tr class="even" valign="top">
-					<th scope="row"><label for="ai_retweet_link"><?php _e('Retweet link:','aitwitterfeeds');?>  </label></th>
-					<td>
-                    <?php 
+          <select name="ai_reply_link" id="ai_reply_link">
+            <?php foreach($ai_yesno as $ai_k=>$ai_v){?>
+            <option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_reply_link_current);?> ><?php echo $ai_v; ?></option>
+            <?php } ?>
+          </select>
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_retweet_link">
+            <?php _e('Retweet link:','aitwitterfeeds');?>
+          </label></th>
+        <td><?php 
 						$ai_retweet_link_current=esc_attr(get_option('ai_retweet_link'));
 					?>
-					<select name="ai_retweet_link" id="ai_retweet_link">
-                    	<?php foreach($ai_yesno as $ai_k=>$ai_v){?>
-                        	<option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_retweet_link_current);?> ><?php echo $ai_v; ?></option>
-                    	<?php } ?>
-                    </select>
-						<p></p>
-					</td>
-				</tr>
-                 <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_favorite_link"><?php _e('Favorite link:','aitwitterfeeds');?>  </label></th>
-					<td>
-                    <?php 
+          <select name="ai_retweet_link" id="ai_retweet_link">
+            <?php foreach($ai_yesno as $ai_k=>$ai_v){?>
+            <option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_retweet_link_current);?> ><?php echo $ai_v; ?></option>
+            <?php } ?>
+          </select>
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_favorite_link">
+            <?php _e('Favorite link:','aitwitterfeeds');?>
+          </label></th>
+        <td><?php 
 						$ai_favorite_link_current=esc_attr(get_option('ai_favorite_link'));
 					?>
-					<select name="ai_favorite_link" id="ai_favorite_link">
-                    	<?php foreach($ai_yesno as $ai_k=>$ai_v){?>
-                        	<option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_favorite_link_current);?> ><?php echo $ai_v; ?></option>
-                    	<?php } ?>
-                    </select>
-						<p></p>
-					</td>
-				</tr>
-                <tr class="even" valign="top">
-					<th scope="row"><label for="ai_background_color"><?php _e('Background color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_background_color" name="ai_background_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_background_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                 <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_link_color"><?php _e('Link color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_link_color" name="ai_link_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_link_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                <tr class="even" valign="top">
-					<th scope="row"><label for="ai_link_hover_color"><?php _e('Link hover color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_link_hover_color" name="ai_link_hover_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_link_hover_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_border_color"><?php _e('Border color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_border_color" name="ai_border_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_border_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                <tr class="even" valign="top">
-					<th scope="row"><label for="ai_text_color"><?php _e('Text color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_text_color" name="ai_text_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_text_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_header_name_color"><?php _e('Header name color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_header_name_color" name="ai_header_name_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_header_name_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                 <tr class="even" valign="top">
-					<th scope="row"><label for="ai_header_username_color"><?php _e('Header username color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_header_username_color" name="ai_header_username_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_header_username_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-                 <tr class="odd" valign="top">
-					<th scope="row"><label for="ai_header_username_hover_color"><?php _e('Header username on hover color:','aitwitterfeeds');?>  </label></th>
-					<td><input type="text" id="ai_header_username_hover_color" name="ai_header_username_hover_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_header_username_hover_color')); ?>" />
-						<p></p>
-					</td>
-				</tr>
-			</table>
-			<p class="submit"><input type="submit" name="submit" class="button-primary" value="Save Settings" /></p>			
-		</form>
-	</div>
+          <select name="ai_favorite_link" id="ai_favorite_link">
+            <?php foreach($ai_yesno as $ai_k=>$ai_v){?>
+            <option value="<?php echo $ai_k; ?>" <?php selected( $ai_v, $ai_favorite_link_current);?> ><?php echo $ai_v; ?></option>
+            <?php } ?>
+          </select>
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_follow_button">
+            <?php _e('Show "Follow @username" links:','aitwitterfeeds');?>
+          </label></th>
+        <td><?php 
+						$ai_follow_link_current=esc_attr(get_option('ai_follow_button'));
+					?>
+          <select name="ai_follow_button" id="ai_follow_button">
+            <?php foreach($ai_yesno as $ai_fk=>$ai_fv){?>
+            <option value="<?php echo $ai_fk; ?>" <?php selected( $ai_v, $ai_follow_link_current);?> ><?php echo $ai_fv; ?></option>
+            <?php } ?>
+          </select>
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_background_color">
+            <?php _e('Background color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_background_color" name="ai_background_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_background_color')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_link_color">
+            <?php _e('Link color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_link_color" name="ai_link_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_link_color')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_link_hover_color">
+            <?php _e('Link hover color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_link_hover_color" name="ai_link_hover_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_link_hover_color')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_border_color">
+            <?php _e('Border color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_border_color" name="ai_border_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_border_color')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_text_color">
+            <?php _e('Text color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_text_color" name="ai_text_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_text_color')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_header_name_color">
+            <?php _e('Header name color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_header_name_color" name="ai_header_name_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_header_name_color')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="even" valign="top">
+        <th scope="row"><label for="ai_header_username_color">
+            <?php _e('Header username color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_header_username_color" name="ai_header_username_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_header_username_color')); ?>" />
+          <p></p></td>
+      </tr>
+      <tr class="odd" valign="top">
+        <th scope="row"><label for="ai_header_username_hover_color">
+            <?php _e('Header username on hover color:','aitwitterfeeds');?>
+          </label></th>
+        <td><input type="text" id="ai_header_username_hover_color" name="ai_header_username_hover_color" class="regular-text ai-color-field" value="<?php echo esc_attr(get_option('ai_header_username_hover_color')); ?>" />
+          <p></p></td>
+      </tr>
+    </table>
+    <p class="submit">
+      <input type="submit" name="submit" class="button-primary" value="Save Settings" />
+    </p>
+  </form>
+</div>
 <?php
 }
 
-function makeLink($string){
-		/*** make sure there is an http:// on all URLs ***/
+function ai_makeLink($ai_tweet_con) {
+	$ai_tweet_con = preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank">$1</a>', $ai_tweet_con);
+	$ai_tweet_con = preg_replace( '/@([a-zA-Z0-9]+)/', '<a href="https://twitter.com/\1" target="_blank">@\1</a>', $ai_tweet_con ); 
+	$ai_tweet_con = preg_replace( '/#([a-zA-Z0-9-]+)/', '<a href="https://twitter.com/search?q=%23\1&src=hash" target="_blank">#\1</a>', $ai_tweet_con ); 
+	return $ai_tweet_con;
+}
 		
-		 $string = preg_replace("/([^\w\/])(www\.[a-z0-9\-]+\.[a-z0-9\-]+)/i", "$1http://$2",$string);
-		/*** make all URLs links ***/
-		 $string = preg_replace("/([\w]+:\/\/[\w-?&;#~=\.\/\@]+[\w\/])/i","<a target=\"_blank\" href=\"$1\">$1</A>",$string);
-		/*** make all emails hot links (just in case ;-) ***/
-		 $string = preg_replace("/([\w-?&;#~=\.\/]+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?))/i","<A HREF=\"mailto:$1\">$1</A>",$string);
-		
-		return $string;
-	}	
-
 // parse time in a twitter style
-function getTime($date)
+function ai_getTime($ai_date)
 {
-	$timediff = time() - strtotime($date);
-	if($timediff < 60)
-		return $timediff . 's';
-	else if($timediff < 3600)
-		return intval(date('i', $timediff)) . 'm';
-	else if($timediff < 86400)
-		return round($timediff/60/60) . 'h';
+	$ai_timediff = time() - strtotime($ai_date);
+	if($ai_timediff < 60)
+		return $ai_timediff . 's';
+	else if($ai_timediff < 3600)
+		return intval(date('i', $ai_timediff)) . 'm';
+	else if($ai_timediff < 86400)
+		return round($ai_timediff/60/60) . 'h';
 	else
-		return date_i18n('M d', strtotime($date));
+		return date_i18n('M d', strtotime($ai_date));
 }	
+
+function ai_twitter_formatter($ai_date)
+{
+	$ai_epoch_timestamp = strtotime( $ai_date );
+	$ai_twitter_time = human_time_diff($ai_epoch_timestamp, current_time('timestamp') ) . ' ago';
+	return $ai_twitter_time;
+}
+
 require_once("twitteroauth/twitteroauth.php"); //Path to twitteroauth library
 
 function getConnectionWithAccessToken($cons_key, $cons_secret, $oauth_token, $oauth_token_secret)
@@ -352,12 +401,13 @@ function ai_get_twitter_feeds($atts)
 	$ai_get_header_name_color=esc_attr(get_option('ai_header_name_color'));
 	$ai_get_header_username_color=esc_attr(get_option('ai_header_username_color'));
 	$ai_get_header_username_hover_color=esc_attr(get_option('ai_header_username_hover_color'));
-				
+	$ai_get_follow_button=esc_attr(get_option('ai_follow_button'));
+		
+			
 	if($ai_twitteruser!='' && $ai_notweets !='' && $ai_consumerkey!='' && $ai_consumersecret!='' && $ai_accesstoken!='' && $ai_accesstokensecret!='')
 	{
 		
 		$ai_tweets = get_connect($ai_consumerkey, $ai_consumersecret, $ai_accesstoken, $ai_accesstokensecret,$ai_twitteruser,$ai_notweets);
-		
 		$styles = '';
 		if($ai_get_background_color != '' || $ai_get_border_color != '' || $ai_get_text_color != '')
 		$styles .= '.aiwidgetscss {background-color: ' . $ai_get_background_color . ';
@@ -377,11 +427,29 @@ function ai_get_twitter_feeds($atts)
 		wp_register_style('aitwitter', plugins_url('css/aitwitter.css', __FILE__));
 		wp_enqueue_style('aitwitter');
 		wp_add_inline_style('aitwitter', $styles);
+		if(is_admin())
+		{
+			$screen = get_current_screen(); 
+			if($screen->id == 'dashboard')
+			{
+				 $ai_wid_title="";
+				 $ai_class="";
+			}
+			else
+			{
+				 $ai_wid_title="<h3 class='widget-title'>".$ai_get_tweetstitle."</h3>";
+				 $ai_class="aiwidgetscss widget";
+			}
+		}
+		else
+		{
+			$ai_wid_title="<h3 class='widget-title'>".$ai_get_tweetstitle."</h3>";	
+			$ai_class="aiwidgetscss widget";
+		}
 		
 			
-		$ai_output="<div class='aiwidgetscss widget'>
-					<h3 class='widget-title'>".$ai_get_tweetstitle."</h3>
-					
+		$ai_output="<div class='".$ai_class."'>
+					".$ai_wid_title."					
 					<div class='aiwidget-title'>".$ai_twitteruser."&nbsp;<span><a href='https://twitter.com/$ai_twitteruser' target='_blank'>@".$ai_twitteruser."</a><span></div>";
 					
 		for($i=0;$i<count($ai_tweets);$i++)
@@ -396,7 +464,7 @@ function ai_get_twitter_feeds($atts)
 			}else{$ai_username_html='';}
 			
 			if($ai_timestamp_display=='Yes'){
-				$ai_timestamp_html='<a href="https://twitter.com/'.$ai_tweets[$i]->user->screen_name.'/status/'.$ai_tweets[$i]->id_str.'" target="_blank">'.getTime($ai_tweets[$i]->created_at).'</a>';
+				$ai_timestamp_html='<a href="https://twitter.com/'.$ai_tweets[$i]->user->screen_name.'/status/'.$ai_tweets[$i]->id_str.'" target="_blank">'.ai_getTime($ai_tweets[$i]->created_at).'</a>';
 			}else{$ai_timestamp_html='';}
 			
 			if($ai_reply_display=='Yes'){$ai_replay_html='<a target="_blank" href="https://twitter.com/intent/tweet?in_reply_to='.$ai_tweets[$i]->id_str.'">reply</a>';}else{$ai_replay_html='';}
@@ -405,23 +473,34 @@ function ai_get_twitter_feeds($atts)
 			
 			if($ai_favorite_display=='Yes'){$ai_favorite_html='<a target="_blank" href="https://twitter.com/intent/favorite?tweet_id='.$ai_tweets[$i]->id_str.'">favorite</a>';}else{$ai_favorite_html='';}
 			
+			if($ai_get_follow_button=='Yes'){
+				
+				$ai_follow_html='<p class="thinkTwitFollow"><a href="https://twitter.com/'. $ai_twitteruser.'" class="twitter-follow-button" data-show-count="false" data-dnt="true">Follow @'.$username.'</a></p>';
+				
+				$ai_follow_html.='<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");twttr.widgets.load();</script>';
+				
+			}else{$ai_follow_html='';}
+			
 			
 			$ai_output.='<div class="imgdisplay">'.$ai_img_html.'
 							<div class="tweettxts">
 							<div class="tweettext">'.$ai_username_html.'
-							&nbsp;'.makeLink($ai_tweets[$i]->text).'&nbsp
+							&nbsp;'.ai_makeLink($ai_tweets[$i]->text).'&nbsp
 							</div> 
 							<div class="tweetlink">
 								'.$ai_timestamp_html.'
 								'.$ai_replay_html.'
 								'.$ai_retweet_html.'
 								'.$ai_favorite_html.'
+								'.ai_twitter_formatter($ai_tweets[$i]->created_at).'
 							</div>
 							</div>
 						</div>';
 		}	
 		
-		$ai_output.="</div>";
+		$ai_output.=$ai_follow_html."</div>";
+		
+	
 		echo $ai_output;
 	}
 	else
@@ -477,6 +556,7 @@ function ai_get_twitter_feeds($atts)
 	
 	public function widget($args, $instance)
 	{
+		
 		$ai_get_widget_twitteruser=$instance['ai_widget_username'] ? $instance['ai_widget_username'] : get_option('ai_consumer_screen_name');
 		$ai_get_widget_notweets=$instance['ai_widget_count'] ? $instance['ai_widget_count'] : get_option('ai_display_number_of_tweets');
 		$title = ($instance['ai_widget_title']) ? $instance['ai_widget_title'] : 'Latest Twitter Feeds';
@@ -535,8 +615,8 @@ function ai_get_twitter_feeds($atts)
 	}
  }
  
-add_action('admin_enqueue_scripts', 'loadAdminJs');
-function loadAdminJs($hook) {
+add_action('admin_enqueue_scripts', 'ai_loadjs');
+function ai_loadjs() {
 	wp_enqueue_style('wp-color-picker');
 	wp_enqueue_script('aisettings', plugins_url('/js/aisettings.js', __FILE__ ), array('jquery', 'wp-color-picker'));
 }
@@ -549,3 +629,4 @@ function ai_widget_init()
 	register_widget('AI_Twitter_Widget');
 }
 add_action('widgets_init', 'ai_widget_init');
+
