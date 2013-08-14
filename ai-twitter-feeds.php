@@ -8,7 +8,7 @@ Plugin URI: http://www.augustinfotech.com
 
 Description: Replaces a shortcode such as [AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title'], or a widget, with a tweets display 
 
-Version: 1.1
+Version: 1.2
 
 Text Domain: aitwitterfeeds
 
