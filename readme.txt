@@ -62,9 +62,12 @@ No Questions
 * First version.
 
 = 1.1 =
-* Fixed the issue of appending feeds content on the top of page where shortcode is included. Now content is displayed where you keep your shortcode in templates.
+* NEW Admin side display tweets in Dashboard.
+* NEW Admin side Manage Show "Follow @username" links.
+* NEW Multiple times you can use Twitter widget & shortcode.
 
 = 1.2 =
+* Fixed the issue of appending feeds content on the top of page where shortcode is included. Now content is displayed where you keep your shortcode in templates.
 
 == Upgrade Notice ==
 
