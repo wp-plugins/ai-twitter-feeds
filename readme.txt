@@ -23,6 +23,9 @@ Features:
 * NEW Admin side Manage Show "Follow @username" links.
 * NEW Multiple times you can use Twitter widget & shortcode.
 
+Plugin Develop by August Infotech [Visit website](http://www.augustinfotech.com)
+
+
 == Installation ==
 
 Important
