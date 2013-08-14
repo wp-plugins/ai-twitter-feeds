@@ -2,8 +2,8 @@
 Contributors: augustinfotech
 Tags: Twitter, Twitter API, Twitter 1.1, Twitter authentication, Feed, Twitter Shortcode, Twitter tweet, tweets, twitter, widget, twitter connect, twitter follow, twitter follow button, twitter share, twitter share button,Dashboard Twitter
 Requires at least: 3.2
-Tested up to: 3.5.2
-Stable tag: 1.1
+Tested up to: 3.6
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,12 +62,10 @@ No Questions
 * First version.
 
 = 1.1 =
-* NEW Admin side display tweets in Dashboard.
-* NEW Admin side Manage Show "Follow @username" links.
-* NEW Multiple times you can use Twitter widget & shortcode.
+* Fixed the issue of appending feeds content on the top of page where shortcode is included. Now content is displayed where you keep your shortcode in templates.
+
+= 1.2 =
 
 == Upgrade Notice ==
 
-* NEW Admin side display tweets in Dashboard.
-* NEW Admin side Manage Show "Follow @username" links.
-* NEW Multiple times you can use Twitter widget & shortcode.
+* Fixed the issue of appending feeds content on the top of page where shortcode is included. Now content is displayed where you keep your shortcode in templates.
