@@ -3,7 +3,7 @@ Contributors: augustinfotech
 Tags: Twitter, Twitter API, Twitter 1.1, Twitter authentication, Feed, Twitter Shortcode, Twitter tweet, tweets, twitter, widget, twitter connect, twitter follow, twitter follow button, twitter share, twitter share button,Dashboard Twitter
 Requires at least: 3.2
 Tested up to: 3.6
-Stable tag: 1.2
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,23 +30,24 @@ Plugin Develop by August Infotech [Visit website](http://www.augustinfotech.com)
 
 Important
 
-To use this one, please follow the steps bellow:
+To use this plugin, please follow the steps given below:
 
 1) Register at https://dev.twitter.com/apps/new and create a new app.
 
-2) After registering, fill in App name, e.g. "_domain name_ App", description, e.g "My Twitter App", and write    the address of your website. Check "I agree" next to their terms of service and click "create your Twitter application"
+2) After registering, fill in App name, e.g. "_domain name_ App", description, e.g "My Twitter App", and write the address of your website. Check "I agree" next to their terms of service and click "create your Twitter application".
 
-3) After this you app will be created. Click "Create my access token" and you should see at the bottom "access    token" and "access token secret". Refresh the page if you don't see them.
+3) After this, your app will be created. Click "Create my access token" and you should see at the bottom "Access token" and "Access token secret". Refresh the page if you don't see them.
 
-4) Copy to widget settings "Consumer key", "Consumer secret", "Access token" and "Access secret"
+4) Copy "Consumer Key", "Consumer Secret", "Access Token" and "Access Token Secret" to admin panel, Menu ->'Settings' -> 'AI Twitter Settings'.
+ 
 
-Steps
+Follow below steps to install plugin:
 
-1. Upload 'AI-Twitter-Feeds folder' to the '/wp-content/plugins/' directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Set Options for Twitter from the 'Settings/AI Twitter Settings' Admin Menu Link
-4. Place PHP code '<?php do_shortcode("[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']");?>' in your php templates.
-5. Place shortcode '[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']' in your post(s)
+1. Download plugin and place 'AI-Twitter-Feeds' folder to the '/wp-content/plugins/' directory or Install plugin directly from your wordpress admin, Menu-> Plugins -> Add New, and search for 'AI-Twitter-Feeds'zip and Install.
+2. Activate the plugin through the WordPress admin panel,'Plugins' menu -> Installed Plugins -> find the 'AI Twitter Feeds' -> Activate.
+3. Set Options for Twitter feeds from the admin panel menu link,'Settings -> AI Twitter Settings'.
+4. Place PHP code '< ? php do_shortcode("[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']"); ? >' to display twitter feeds in your page template.
+5. Place shortcode '[AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title']' to display twitter feeds in your post(s).
 6. Use the widget to place it in your sidebar or other areas!
 
 == Frequently Asked Questions ==
@@ -71,6 +72,9 @@ No Questions
 
 = 1.2 =
 * Fixed the issue of appending feeds content on the top of page where shortcode is included. Now content is displayed where you keep your shortcode in templates.
+
+= 1.3 =
+* Fixed the widget width in admin panel. Modified links and Installation steps.
 
 == Upgrade Notice ==
 
