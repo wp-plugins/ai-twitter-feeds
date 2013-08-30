@@ -71,11 +71,14 @@ No Questions
 * NEW Multiple times you can use Twitter widget & shortcode.
 
 = 1.2 =
-* Fixed the issue of appending feeds content on the top of page where shortcode is included. Now content is displayed where you keep your shortcode in templates.
+* Fixed the issue of appending feeds content on the top of page where shortcode is included. 
+* Now content is displayed where you keep your shortcode in templates.
 
 = 1.3 =
-* Fixed the widget width in admin panel. Modified links and Installation steps.
+* Fixed the widget width in admin panel. 
+* Modified links and Installation steps.
 
 == Upgrade Notice ==
 
-* Fixed the issue of appending feeds content on the top of page where shortcode is included. Now content is displayed where you keep your shortcode in templates.
+* Fixed the issue of appending feeds content on the top of page where shortcode is included. 
+* Now content is displayed where you keep your shortcode in templates.
