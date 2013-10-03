@@ -2,7 +2,7 @@
 /*
 Plugin Name: AI Twitter Feeds (Twitter widget & shortcode)
 Plugin URI: http://www.augustinfotech.com
-Description: Replaces a shortcode such as [AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title'], or a widget, with a tweets display 
+Description: Replaces a shortcode such as [AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title'], or a widget, with a tweets display.<strong style="color:red;">As per twitter API 1.1 developer display requirements policy new version is updated. PLEASE DO NOT USE OLDER VERSIONS.</strong>
 Version: 2.0
 Text Domain: aitwitterfeeds
 Author: August Infotech
@@ -20,7 +20,15 @@ add_action('admin_menu','ai_twitter_setting');
 */
 add_action('admin_init','ai_init');
 add_action('wp_dashboard_setup', 'ai_add_dashboard_tweets_feed' );
+$file   = basename( __FILE__ );
+$folder = basename( dirname( __FILE__ ) );
+$hook = "in_plugin_update_message-{$folder}/{$file}";
+add_action( $hook, 'update_message_wpse_87051', 10, 2 ); 
 
+function update_message_wpse_87051( $plugin_data, $r )
+{
+    echo '<strong style="color:red;">As per twitter API 1.1 developer display requirements policy new version is updated. PLEASE DO NOT USE OLDER VERSIONS.</strong>';
+}
 # Load the language files
 function ai_tweets_init(){
 	load_plugin_textdomain( 'aitwitterfeeds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
