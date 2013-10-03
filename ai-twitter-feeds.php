@@ -20,15 +20,57 @@ add_action('admin_menu','ai_twitter_setting');
 */
 add_action('admin_init','ai_init');
 add_action('wp_dashboard_setup', 'ai_add_dashboard_tweets_feed' );
-$file   = basename( __FILE__ );
-$folder = basename( dirname( __FILE__ ) );
-$hook = "in_plugin_update_message-{$folder}/{$file}";
-add_action( $hook, 'update_message_wpse_87051', 10, 2 ); 
 
-function update_message_wpse_87051( $plugin_data, $r )
+global $pagenow;
+if ( 'plugins.php' === $pagenow )
 {
-    echo '<strong style="color:red;">As per twitter API 1.1 developer display requirements policy new version is updated. PLEASE DO NOT USE OLDER VERSIONS.</strong>';
+    // Better update message
+    $file   = basename( __FILE__ );
+    $folder = basename( dirname( __FILE__ ) );
+    $hook = "in_plugin_update_message-{$folder}/{$file}";
+    add_action( $hook, 'your_update_message_cb', 20, 2 );
 }
+
+/**
+ * Displays an update message for plugin list screens.
+ * Shows only the version updates from the current until the newest version
+ * 
+ * @param (array) $plugin_data
+ * @param (object) $r
+ * @return (string) $output
+ */
+function your_update_message_cb( $plugin_data, $r )
+{
+    // readme contents
+    $data       = file_get_contents( 'http://plugins.trac.wordpress.org/browser/ai-twitter-feeds/trunk/readme.txt?format=txt' );
+
+    // assuming you've got a Changelog section
+    // @example == Changelog ==
+    $changelog  = stristr( $data, '== Changelog ==' );
+
+    // assuming you've got a Screenshots section
+    // @example == Screenshots ==
+    $changelog  = stristr( $changelog, '== Screenshots ==', true );
+
+    // only return for the current & later versions
+    $curr_ver   = get_plugin_data('Version');
+
+    // assuming you use "= v" to prepend your version numbers
+    // @example = v0.2.1 =
+    $changelog  = stristr( $changelog, "= v{$curr_ver}" );
+
+    // uncomment the next line to var_export $var contents for dev:
+    # echo '<pre>'.var_export( $plugin_data, false ).'<br />'.var_export( $r, false ).'</pre>';
+
+    // echo stuff....
+    $output = '
+As per twitter API 1.1 developer display requirements policy new version is updated. PLEASE DO NOT USE OLDER VERSIONS. 
+**PLEASE DO NOT USE OLDER VERSIONS.
+All older version do not meet requirements at below link policy hence removed. We will not provide support for older versions (1.0, 1.1, 1.2 & 1.3).** For Developer Display Requirements Policy - https://dev.twitter.com/terms/display-requirements';
+    return print $output;
+}
+
+
 # Load the language files
 function ai_tweets_init(){
 	load_plugin_textdomain( 'aitwitterfeeds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
