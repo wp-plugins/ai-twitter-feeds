@@ -21,6 +21,7 @@ add_action('admin_menu','ai_twitter_setting');
 add_action('admin_init','ai_init');
 add_action('wp_dashboard_setup', 'ai_add_dashboard_tweets_feed' );
 
+/** Start Upgrade Notice **/
 global $pagenow;
 if ( 'plugins.php' === $pagenow )
 {
@@ -28,47 +29,18 @@ if ( 'plugins.php' === $pagenow )
     $file   = basename( __FILE__ );
     $folder = basename( dirname( __FILE__ ) );
     $hook = "in_plugin_update_message-{$folder}/{$file}";
-    add_action( $hook, 'your_update_message_cb', 20, 2 );
+    add_action( $hook, 'update_notification_message', 20, 2 );
 }
-
-/**
- * Displays an update message for plugin list screens.
- * Shows only the version updates from the current until the newest version
- * 
- * @param (array) $plugin_data
- * @param (object) $r
- * @return (string) $output
- */
-function your_update_message_cb( $plugin_data, $r )
+function update_notification_message( $plugin_data, $r )
 {
-    // readme contents
-    $data       = file_get_contents( 'http://plugins.trac.wordpress.org/browser/ai-twitter-feeds/trunk/readme.txt?format=txt' );
+    $data = file_get_contents( 'http://plugins.trac.wordpress.org/browser/ai-twitter-feeds/trunk/readme.txt?format=txt' );
+	$upgradetext = stristr( $data, '== Upgrade Notice ==' );	
+	$upgradenotice = stristr( $upgradetext, '*' );	
+	$output = "<div style='color:#EEC2C1;font-weight: normal;background: #C92727;padding: 10px;border: 1px solid #eed3d7;border-radius: 4px;'><strong style='color:rgb(253, 230, 61)'>Update Notice : </strong> ".$upgradenotice."</div>";
 
-    // assuming you've got a Changelog section
-    // @example == Changelog ==
-    $changelog  = stristr( $data, '== Changelog ==' );
-
-    // assuming you've got a Screenshots section
-    // @example == Screenshots ==
-    $changelog  = stristr( $changelog, '== Screenshots ==', true );
-
-    // only return for the current & later versions
-    $curr_ver   = get_plugin_data('Version');
-
-    // assuming you use "= v" to prepend your version numbers
-    // @example = v0.2.1 =
-    $changelog  = stristr( $changelog, "= v{$curr_ver}" );
-
-    // uncomment the next line to var_export $var contents for dev:
-    # echo '<pre>'.var_export( $plugin_data, false ).'<br />'.var_export( $r, false ).'</pre>';
-
-    // echo stuff....
-    $output = '
-As per twitter API 1.1 developer display requirements policy new version is updated. PLEASE DO NOT USE OLDER VERSIONS. 
-**PLEASE DO NOT USE OLDER VERSIONS.
-All older version do not meet requirements at below link policy hence removed. We will not provide support for older versions (1.0, 1.1, 1.2 & 1.3).** For Developer Display Requirements Policy - https://dev.twitter.com/terms/display-requirements';
     return print $output;
 }
+/** End Upgrade Notice **/
 
 
 # Load the language files
