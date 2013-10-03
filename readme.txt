@@ -56,3 +56,6 @@ To use this plugin, please follow the steps given below:
 * Removed version due to twitter API developer display requirements policy.  
 = 2.0 =* Removed older versions due to twitter API developer display requirements policy.* New version cover all features as older versions, but as per twitter API developer display requirements policy.
 == Upgrade Notice ==* New version cover all features as older versions, but as per twitter API developer display requirements policy.
+* PLEASE DO NOT USE OLDER VERSIONS.
+  All older version do not meet requirements at below link policy hence removed. We will not provide support for older versions (1.0, 1.1, 1.2 & 1.3).
+  Visit website : [For Developer Display Requirements Policy] https://dev.twitter.com/terms/display-requirements
