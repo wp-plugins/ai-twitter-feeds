@@ -14,7 +14,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 **PLEASE DO NOT USE OLDER VERSIONS.All older version do not meet requirements at below link policy hence removed. We will not provide support for older versions (1.0, 1.1, 1.2 & 1.3).**
 
-**Visit website :** [For Developer Display Requirements Policy] https://dev.twitter.com/terms/display-requirements. Embed timelines using only username or Hashtags/keywords.
+**Visit website:** [For Developer Display Requirements Policy] https://dev.twitter.com/terms/display-requirements. Embed timelines using only username or Hashtags/keywords.
 
 * Using Twitter 1.1 API with authentication in Admin.
 * No JavaScript embedded.
