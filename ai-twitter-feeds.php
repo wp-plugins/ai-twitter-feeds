@@ -3,7 +3,7 @@
 Plugin Name: AI Twitter Feeds (Twitter widget & shortcode)
 Plugin URI: http://www.augustinfotech.com
 Description: Replaces a shortcode such as [AIGetTwitterFeeds ai_username='Your Twitter Name(Without the "@" symbol)' ai_numberoftweets='Number Of Tweets' ai_tweet_title='Your Title'], or a widget, with a tweets display.<strong style="color:red;">As per twitter API 1.1 developer display requirements policy new version is updated. PLEASE DO NOT USE OLDER VERSIONS.</strong>
-Version: 2.2
+Version: 2.3
 Text Domain: aitwitterfeeds
 Author: August Infotech
 Author URI: http://www.augustinfotech.com
@@ -185,12 +185,15 @@ function ai_option_page(){ ?>
 		</form>
 	</div>
 <?php }
-
-function ai_makeLink($ai_tweet_con){
-	$ai_tweet_con = preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank">$1</a>', $ai_tweet_con);
-	$ai_tweet_con = preg_replace( '/@([a-zA-Z0-9]+)/', '<a href="https://twitter.com/\1" target="_blank">@\1</a>', $ai_tweet_con ); 
-	$ai_tweet_con = preg_replace( '/#([a-zA-Z0-9-]+)/', '<a href="https://twitter.com/search?q=%23\1&src=hash" target="_blank">#\1</a>', $ai_tweet_con ); 
-	return $ai_tweet_con;
+ 
+function IMTConvertLinks( $status, $targetBlank=true, $linkMaxLen=250 ){	
+	$target=$targetBlank ? " target=\"_blank\" " : "";
+	$status = preg_replace("/((http:\/\/|https:\/\/)[^ )
+	]+)/e", "'<a href=\"$1\" title=\"$1\" $target >'. ((strlen('$1')>=$linkMaxLen ? substr('$1',0,$linkMaxLen).'...':'$1')).'</a>'", $status);
+	$status = preg_replace("/(@([_a-z0-9\-]+))/i","<a href=\"http://twitter.com/$2\" title=\"Follow $2\" $target >$1</a>",$status);
+	$status = preg_replace("/\b([a-zA-Z][a-zA-Z0-9\_\.\-]*[a-zA-Z]*\@[a-zA-Z][a-zA-Z0-9\_\.\-]*[a-zA-Z]{2,6})\b/i","<a href=\"mailto://$1\" class=\"twitter-link\">$1</a>", $status);
+	$status = preg_replace("/(#([_a-z0-9\-]+))/i","<a href=\"https://twitter.com/search?q=$2\" title=\"Search $1\" $target >$1</a>",$status);
+	return $status;
 }
 
 // parse time in a twitter style
@@ -289,30 +292,34 @@ function ai_get_twitter_feeds($atts){
 				$ai_follow_html='<p class="thinkTwitFollow"><a href="https://twitter.com/'. $ai_twitteruser.'" class="twitter-follow-button" data-show-count="false" data-dnt="true">Follow @'.$ai_twitteruser.'</a></p>';
 
 				$ai_follow_html.="<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>";
+				
+				if( preg_match('/RT +@[^ :]+:?/ui', $ai_tweets[$i]->text, $retweets) ) {
+					$ai_tweets_text = $retweets[0].$ai_tweets[$i]->retweeted_status->text;
+				} else {
+					$ai_tweets_text = $ai_tweets[$i]->text;
+				}
 
 				$ai_output.='<div class="imgdisplay">'.$ai_img_html.'
-				<div class="tweettxts">
-				<div class="tweettext">'.$ai_username_html.''.ai_makeLink($ai_tweets[$i]->text).'&nbsp
-				</div> 
-				<div class="tweetlink">
-				'.$ai_timestamp_html.'
-				'.$ai_replay_html.'
-				'.$ai_retweet_html.'
-				'.$ai_favorite_html.'
-				<a href="https://twitter.com/'.$ai_twitteruser.'" target="_blank">'.ai_twitter_formatter($ai_tweets[$i]->created_at).'</a>
-				</div>
-				</div>
+					<div class="tweettxts">
+						<div class="tweettext">'.$ai_username_html.''.IMTConvertLinks($ai_tweets_text).'&nbsp</div> 
+						<div class="tweetlink">
+							'.$ai_timestamp_html.'
+							'.$ai_replay_html.'
+							'.$ai_retweet_html.'
+							'.$ai_favorite_html.'
+							<a href="https://twitter.com/'.$ai_twitteruser.'" target="_blank">'.ai_twitter_formatter($ai_tweets[$i]->created_at).'</a>
+						</div>
+					</div>
 				</div>';
 			}
+			
 		}	
 		$ai_output.=$ai_follow_html."</div>";
-		//echo $ai_output;
 	} else {
 		$ai_output="<div id='aiwidgetscss'>
-		<h1>".$ai_get_tweetstitle."</h1>
-		<div>Please Fill All Required Value</div>
-		</div>";
-		//echo $ai_output;			
+			<h1>".$ai_get_tweetstitle."</h1>
+			<div>Please Fill All Required Value</div>
+		</div>";			
 	}
 	return $ai_output;
 }
@@ -324,9 +331,7 @@ function ai_get_twitter_feeds($atts){
 */
 class AI_Twitter_Widget extends WP_Widget {
 
-	/*
-		* Register the widget for use in WordPress
-	*/ 
+	/* Register the widget for use in WordPress */ 
 	public function AI_Twitter_Widget(){
 		$this->options = array(
 			array(

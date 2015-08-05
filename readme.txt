@@ -2,8 +2,8 @@
 Contributors: augustinfotech
 Tags: Twitter, Twitter API, Twitter 1.1, Twitter authentication, Feed, Twitter Shortcode, Twitter tweet, tweets, twitter, widget, twitter connect, twitter follow, twitter follow button, twitter share, twitter share button,Dashboard Twitter
 Requires at least: 3.2
-Tested up to: 4.0
-Stable tag: 2.2
+Tested up to: 4.2.4
+Stable tag: 2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 = 2.2 =
 * Add custom css option and display error messages.
+
+= 2.3 =
+* Resolve retweet link issue.
 
 == Upgrade Notice ==
 **New version cover all features as older versions, but as per twitter API developer display requirements policy.**
