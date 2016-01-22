@@ -91,7 +91,7 @@ function ai_twitterfeed_uninstall(){
 */
 function ai_option_page(){ ?>
 	<div class="wrap"> 
-		<img src="<?php echo plugins_url('ai-twitter-feeds/css/augustinfotech.jpg'); ?>" class="icon32" />
+		<img src="<?php echo plugins_url('ai-twitter-feeds/css/augustinfotech.jpg'); ?>" class="icon32" alt="August Infotech" />
 		<h2 style="padding:5px 15px 5px 0;"><?php _e('AI Twitter Feed Options','aitwitterfeeds');?></h2>	
 		<p><?php _e('Here you can set or edit the fields needed for the plugin.','aitwitterfeeds');?></p>
 		<p><?php _e('You can find these settings here: <a href="https://dev.twitter.com/apps" target="_blank">Twitter API</a>','aitwitterfeeds');?></p>
@@ -281,7 +281,7 @@ function ai_get_twitter_feeds($atts){
 			if(!empty($ai_tweets->errors)) {
 				$ai_output .= '<p>'.$ai_tweets->errors[$i]->message.'</p>';
 			} else {
-				$ai_img_html='<a href="https://twitter.com/'.$ai_twitteruser.'" target="_blank"><img src="'.$ai_tweets[$i]->user->profile_image_url_https.'" class="imgalign"/></a>';
+				$ai_img_html='<a href="https://twitter.com/'.$ai_twitteruser.'" target="_blank"><img src="'.$ai_tweets[$i]->user->profile_image_url_https.'" class="imgalign" alt="'.$ai_twitteruser.'"/></a>';
 
 				$ai_username_html='<span class="tweet_author_name">
 				<a href="https://twitter.com/'.$ai_twitteruser.'" target="_blank">'.$ai_tweets[$i]->user->name.'</a>
