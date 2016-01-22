@@ -361,8 +361,7 @@ class AI_Twitter_Widget extends WP_Widget {
 
 		/* Widget control settings. */
 		$control_ops = array('width' => 250);
-		parent::WP_Widget('ai_widget','AI Twiiter Feeds',$widget_options,$control_ops);
-
+		parent::__construct('ai_widget','AI Twiiter Feeds',$widget_options,$control_ops);
 	}
 
 	public function widget($args, $instance) {
